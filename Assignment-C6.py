@@ -1,59 +1,56 @@
-# Assignment-C6 (Expert System - Hospitals and Medical Facilities)
-
-"""
-THIS CODE HAS BEEN TESTED AND IS FULLY OPERATIONAL.
-
-Problem Statement: Implement any one of the following Expert System
-  II. Hospitals and medical facilities
-
-Code from ArtificialIntelligence (SPPU - Third Year - Computer Engineering - Content) repository on KSKA Git: https://git.kska.io/sppu-te-comp-content/ArtificialIntelligence
-"""
-
-# BEGINNING OF CODE
-def knowledge():
+def knowledge_base():
     return {
-        "sneezes":"Cold",
-        "temperature":"Fever",
-        "weakness": "Iron Deficiency",
-        "forgets":"Alzeimers",
-        "cough":"Covid-19",
-        "paleness":"Flu"
+        "Cold": ["sneezing", "cough"],
+        "Fever": ["temperature", "weakness"],
+        "Covid-19": ["cough", "temperature", "weakness"],
+        "Flu": ["paleness", "temperature"],
+        "Iron Deficiency": ["weakness", "paleness"]
+    }
+
+def questions():
+    return {
+        "sneezing": "Are you sneezing frequently?",
+        "cough": "Do you have cough?",
+        "temperature": "Do you have high temperature?",
+        "weakness": "Are you feeling weak?",
+        "paleness": "Does your skin look pale?"
     }
 
 def ask(q):
     while True:
-        a= input(f"{q} [Yes/No]\t").lower()
-        if a in ['yes', 'no']:
-            if a== "yes": return True
-            return False
-        else: print("Please Answer in Yes or No.\n")
+        ans = input(q + " (yes/no): ").lower()
+        if ans in ["yes", "no"]:
+            return ans == "yes"
+        print("Please enter yes or no.")
 
-def questions_List():
-    return {
-        "sneezes": "Are you sneezing frequently?",
-        "temperature": "Do you have high temperature?",
-        "weakness": "Are you feeling weak in your legs and arms?",
-        "forgets": "Are you able to remember things clearly?",
-        "cough": "Do you have cough or sore throat?",
-        "paleness": "Does your skin look pale?",
-    }
+def diagnose():
+    print("\nWelcome to Smart Medical Expert System\n")
 
-# P.S. The author wants the user to notice the subtle use of questions.items() to retrieve the entire key value pair from the dictionary.
+    symptoms_input = {}
+    q_list = questions()
 
-def doctor():
-    print("*"*30,"\nWelcome to Doctor Smith's!","*"*30)
-    know=knowledge()
-    questions=questions_List()
-    symtoms={}
-    for s,q in questions.items():
-        symtoms[s]=ask(q)
-    diagnosis=[]
-    for sym in know:
-        if symtoms[sym]:
-            diagnosis.append(know[sym])
-    print("\n\nYour Diagnosis is: \n")
-    for d in diagnosis:
-        print(d)
+    # Collect user input
+    for key, question in q_list.items():
+        symptoms_input[key] = ask(question)
 
-doctor()
-# END OF CODE
+    kb = knowledge_base()
+    scores = {}
+
+    # Calculate matching score
+    for disease, symptoms in kb.items():
+        score = 0
+        for sym in symptoms:
+            if symptoms_input.get(sym):
+                score += 1
+        scores[disease] = score
+
+    # Find best match
+    max_score = max(scores.values())
+    
+    print("\nPossible Diagnosis:\n")
+
+    for disease, score in scores.items():
+        if score == max_score and score > 0:
+            print(f"{disease} (match score: {score})")
+
+diagnose()
