@@ -1,43 +1,100 @@
 import nltk
 from nltk.chat.util import Chat, reflections
 
-nltk.download('punkt')
+# Download tokenizer only once
+# nltk.download('punkt')
 
 pairs = [
+
+    # Greetings
     [
-        r"hi|hello|hey",
-        ["Hello! Welcome to our store."]
+        r"(?i).*\b(hi|hello|hey|hola)\b.*",
+        [
+            "Hello! Welcome to our store.",
+            "Hi there! How can I help you today?",
+            "Hey! Need any assistance?"
+        ]
     ],
 
+    # Name
     [
-        r"what is your name ?",
-        ["I am a customer support chatbot."]
+        r"(?i).*(your name|who are you).*",
+        [
+            "I am a customer support chatbot.",
+            "You can call me StoreBot."
+        ]
     ],
 
+    # Order tracking
     [
-        r"how can i track my order ?",
-        ["You can track your order from the 'My Orders' section."]
+        r"(?i).*(track|tracking|order status).*",
+        [
+            "You can track your order from the 'My Orders' section.",
+            "Open 'My Orders' to check your delivery status."
+        ]
     ],
 
+    # Payment methods
     [
-        r"what payment methods do you accept ?",
-        ["We accept Credit Card, Debit Card, UPI, and Net Banking."]
+        r"(?i).*(payment|pay|upi|card|net banking).*",
+        [
+            "We accept Credit Card, Debit Card, UPI, and Net Banking."
+        ]
     ],
 
+    # Return product
     [
-        r"how to return a product ?",
-        ["Go to 'My Orders' and click on Return Product."]
+        r"(?i).*(return|refund|replace).*",
+        [
+            "Go to 'My Orders' and click on 'Return Product'.",
+            "You can request a refund from the orders section."
+        ]
     ],
 
+    # Delivery
     [
-        r"bye|exit",
-        ["Thank you for visiting. Goodbye!"]
+        r"(?i).*(delivery|shipping|arrive).*",
+        [
+            "Delivery usually takes 3-5 business days."
+        ]
+    ],
+
+    # Thanks
+    [
+        r"(?i).*\b(thanks|thank you)\b.*",
+        [
+            "You're welcome!",
+            "Happy to help!"
+        ]
+    ],
+
+    # Exit
+    [
+        r"(?i).*\b(bye|exit|quit)\b.*",
+        [
+            "Thank you for visiting. Goodbye!",
+            "Have a great day!"
+        ]
+    ],
+
+    # Fallback response
+    [
+        r"(.*)",
+        [
+            "Sorry, I didn't understand that.",
+            "Could you please rephrase your question?",
+            "I am still learning. Try asking something else."
+        ]
     ]
 ]
 
+# Create chatbot
 chatbot = Chat(pairs, reflections)
 
-print("Customer Support Chatbot")
-print("Type 'bye' to exit\n")
+print("=" * 50)
+print("      CUSTOMER SUPPORT CHATBOT")
+print("=" * 50)
+print("Type 'bye' to exit.\n")
 
+# Start conversation
 chatbot.converse()
