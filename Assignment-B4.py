@@ -1,61 +1,20 @@
-# Assignment-B4 (N-Queen)
-
-"""
-THIS CODE HAS BEEN TESTED AND IS FULLY OPERATIONAL.
-
-Problem Statement: Implement a solution for a Constraint Satisfaction Problem using Branch and Bound and Backtracking for n-queens problem or a graph coloring problem.
-
-Code from ArtificialIntelligence (SPPU - Third Year - Computer Engineering - Content) repository on KSKA Git: https://git.kska.io/sppu-te-comp-content/ArtificialIntelligence
-"""
-
-# BEGINNING OF CODE
-def placeQueens(i, cols, leftDiagonal, rightDiagonal, cur):
-    n = len(cols)
-
-    if i == n:
-        return True
-
+def solve(i, cols, ld, rd, cur, n):
+    if i == n: return True
     for j in range(n):
-        if cols[j] or rightDiagonal[i + j] or leftDiagonal[i - j + n - 1]:
-            continue
-
-        cols[j] = 1 
-        rightDiagonal[i + j] = 1
-        leftDiagonal[i - j + n - 1] = 1
+        if cols[j] or rd[i+j] or ld[i-j+n-1]: continue
+        cols[j] = rd[i+j] = ld[i-j+n-1] = 1
         cur.append(j)
-
-        if placeQueens(i + 1, cols, leftDiagonal, rightDiagonal, cur):
-            return True
-
+        if solve(i+1, cols, ld, rd, cur, n): return True
         cur.pop()
-        cols[j] = 0
-        rightDiagonal[i + j] = 0
-        leftDiagonal[i - j + n - 1] = 0
-
+        cols[j] = rd[i+j] = ld[i-j+n-1] = 0
     return False
 
 def nQueen(n):
-    cols = [0] * n
-    leftDiagonal = [0] * (n * 2)
-    rightDiagonal = [0] * (n * 2)
-    cur = []
-    board = [['.' for _ in range(n)] for _ in range(n)]
+    cols, ld, rd, cur = [0]*n, [0]*(2*n), [0]*(2*n), []
+    if solve(0, cols, ld, rd, cur, n):
+        b = [['.']*n for _ in range(n)]
+        for i in range(n): b[i][cur[i]] = 'Q'
+        for row in b: print(" ".join(row))
+    else: print("No solution exists.")
 
-    if placeQueens(0, cols, leftDiagonal, rightDiagonal, cur):
-        for i in range(n):
-            board[i][cur[i]] = 'Q'
-        return board
-    else:
-        return None
-
-def printBoard(board):
-    if board:
-        for row in board:
-            print(" ".join(row))
-    else:
-        print("No solution exists.")
-
-n = int(input("Enter the number of queens:\t"))
-board = nQueen(n)
-printBoard(board)
-# END OF CODE
+nQueen(int(input("Enter the number of queens:\t")))
