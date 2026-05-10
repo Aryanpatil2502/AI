@@ -18,10 +18,10 @@ def questions():
 
 def ask(q):
     while True:
-        ans = input(q + " (yes/no): ").lower()
-        if ans in ["yes", "no"]:
-            return ans == "yes"
-        print("Please enter yes or no.")
+        ans = input(q + " (y/n): ").lower()
+        if ans in ["y", "n"]:
+            return ans == "y"   # FIXED
+        print("Please enter y or n.")
 
 def diagnose():
     print("\nWelcome to Smart Medical Expert System\n")
@@ -46,11 +46,17 @@ def diagnose():
 
     # Find best match
     max_score = max(scores.values())
-    
+
     print("\nPossible Diagnosis:\n")
+
+    found = False
 
     for disease, score in scores.items():
         if score == max_score and score > 0:
             print(f"{disease} (match score: {score})")
+            found = True
+
+    if not found:
+        print("No matching disease found.")
 
 diagnose()
